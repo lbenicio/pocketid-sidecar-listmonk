@@ -1,23 +1,29 @@
 # PocketID → Listmonk Sync Sidecar
 
+![GitHub License](https://img.shields.io/github/license/lbenicio/pocketid-sidecar-listmonk?style=flat&color=blue)
+![GitHub Release](https://img.shields.io/github/v/release/lbenicio/pocketid-sidecar-listmonk?style=flat&color=blue)
+[![Dependabot Updates](https://github.com/lbenicio/pocketid-sidecar-listmonk/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/lbenicio/pocketid-sidecar-listmonk/actions/workflows/dependabot/dependabot-updates)
+[![CodeQL](https://github.com/lbenicio/pocketid-sidecar-listmonk/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/lbenicio/pocketid-sidecar-listmonk/actions/workflows/github-code-scanning/codeql)
+[![Dependency Graph](https://github.com/lbenicio/pocketid-sidecar-listmonk/actions/workflows/dependabot/update-graph/badge.svg)](https://github.com/lbenicio/pocketid-sidecar-listmonk/actions/workflows/dependabot/update-graph)
+
 A tiny Go service that reconciles **[PocketID](https://github.com/pocket-id/pocket-id)** users with a specific mailing list in **[Listmonk](https://listmonk.app/)**. Run it as a cron job to keep your newsletter list automatically in sync with your identity provider.
 
 ## How it works
 
-```
-┌──────────────┐     ┌─────────────────┐     ┌───────────┐
+```text
+┌──────────────┐     ┌──────────────────┐     ┌───────────┐
 │   PocketID   │────▶│  sync sidecar    │────▶│  Listmonk │
 │   (users)    │     │  (reconciliation)│     │  (list)   │
-└──────────────┘     └─────────────────┘     └───────────┘
+└──────────────┘     └──────────────────┘     └───────────┘
 ```
 
 Each run performs a full three-way reconciliation:
 
-| Event                   | Action                                               |
-| ----------------------- | ---------------------------------------------------- |
-| New PocketID user       | Subscriber **created** in the target list            |
-| User **deleted** in PocketID | Subscriber **deleted** from the list             |
-| User name/email changed | Subscriber **updated** in the list                   |
+| Event                        | Action                                                |
+| ---------------------------- | ----------------------------------------------------- |
+| New PocketID user            | Subscriber **created** in the target list             |
+| User **deleted** in PocketID | Subscriber **deleted** from the list                  |
+| User name/email changed      | Subscriber **updated** in the list                    |
 
 Matching between PocketID and Listmonk is done via a `pocketid_id` attribute stored on each subscriber record.
 
@@ -25,7 +31,7 @@ Matching between PocketID and Listmonk is done via a `pocketid_id` attribute sto
 
 All configuration lives in environment variables. Copy `.env.example` to `.env` and fill in your values.
 
-```bash
+```env
 # PocketID
 POCKETID_BASE_URL=http://localhost:8090
 POCKETID_API_KEY=your-pocketid-admin-api-key
@@ -47,10 +53,14 @@ SYNC_DRY_RUN=false    # Set to true to preview changes without mutating
 ```bash
 # Build
 make build
+```
 
+```bash
 # Run (reads env vars from your shell)
 source .env && ./bin/pocketid-sidecar-listmonk
+```
 
+```bash
 # Dry run to preview changes
 SYNC_DRY_RUN=true go run ./cmd/sync
 ```
@@ -59,6 +69,9 @@ SYNC_DRY_RUN=true go run ./cmd/sync
 
 ```bash
 docker build -t pocketid-sidecar-listmonk .
+```
+
+```bash
 docker run --rm --env-file .env pocketid-sidecar-listmonk
 ```
 
@@ -123,7 +136,7 @@ services:
 
 ### Plain cron (Linux)
 
-```
+```text
 # /etc/cron.d/pocketid-sync — every 5 minutes
 */5 * * * * root . /etc/pocketid-sync.env && /usr/local/bin/pocketid-sidecar-listmonk >> /var/log/pocketid-sync.log 2>&1
 ```
@@ -132,7 +145,7 @@ services:
 
 Set `SYNC_DRY_RUN=true` to see what the syncer **would** do without actually mutating any data in Listmonk. Useful for testing and debugging.
 
-```
+```log
 [sync] fetching PocketID users...
 [sync] found 3 users in PocketID
 [sync] fetching Listmonk subscribers for list...
@@ -150,6 +163,12 @@ errors:  0
 
 ```bash
 make build    # builds to bin/pocketid-sidecar-listmonk
+```
+
+```bash
 make lint     # runs go vet
+```
+
+```bash
 make clean    # removes bin/
 ```
