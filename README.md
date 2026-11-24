@@ -2,9 +2,6 @@
 
 ![GitHub License](https://img.shields.io/github/license/lbenicio/pocketid-sidecar-listmonk?style=flat&color=blue)
 ![GitHub Release](https://img.shields.io/github/v/release/lbenicio/pocketid-sidecar-listmonk?style=flat&color=blue)
-[![Dependabot Updates](https://github.com/lbenicio/pocketid-sidecar-listmonk/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/lbenicio/pocketid-sidecar-listmonk/actions/workflows/dependabot/dependabot-updates)
-[![CodeQL](https://github.com/lbenicio/pocketid-sidecar-listmonk/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/lbenicio/pocketid-sidecar-listmonk/actions/workflows/github-code-scanning/codeql)
-[![Dependency Graph](https://github.com/lbenicio/pocketid-sidecar-listmonk/actions/workflows/dependabot/update-graph/badge.svg)](https://github.com/lbenicio/pocketid-sidecar-listmonk/actions/workflows/dependabot/update-graph)
 
 A tiny Go service that reconciles **[PocketID](https://github.com/pocket-id/pocket-id)** users with a specific mailing list in **[Listmonk](https://listmonk.app/)**. Run it as a cron job to keep your newsletter list automatically in sync with your identity provider.
 
